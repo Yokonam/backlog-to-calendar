@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Backlog to Calendar",
+  "version": "1.0.0",
+  "description": "Backlog to Calendar.",
+  "content_scripts": [
+    {
+      "js": ["content.js"],
+      "matches": ["http://*.backlog.com//", "http://*.backlog.jp//"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
