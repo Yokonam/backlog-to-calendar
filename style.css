@@ -1,0 +1,45 @@
+.ticket__title {
+  display: flex;
+  gap: 20px;
+}
+.to-calender {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 11px;
+  font-size: 13px;
+  border-left: var(--borderColorDefault) 1px solid;
+  padding-left: 20px;
+}
+.to-calender-select {
+  background-color: var(--backgroundColorSchemeBase);
+  border: solid 1px var(--borderColorPrimary);
+  transition-duration: 0.15s;
+  transition-timing-function: ease-in-out;
+  border-radius: 4px;
+  padding: 5px 11px;
+  line-height: 3rem;
+  cursor: pointer;
+}
+
+.to-calender-button {
+  width: auto;
+  border-radius: 20px;
+  padding-right: 11px;
+  padding-left: 11px;
+  padding-top: 0;
+  padding-bottom: 0;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--backgroundColorSchemeBase);
+  border: solid 1px var(--borderColorPrimary);
+  transition-property: background-color, border-color;
+  transition-duration: 0.15s;
+  transition-timing-function: ease-in-out;
+  height: 32px;
+}
+.to-calender-button:hover {
+  background-color: var(--defaultColorAccent);
+  border-color: var(--defaultColorAccent);
+  text-decoration: none;
+}

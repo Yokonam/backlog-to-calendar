@@ -3,10 +3,13 @@
   "name": "Backlog to Calendar",
   "version": "1.0.0",
   "description": "Backlog to Calendar.",
+  "permissions": ["storage"],
   "content_scripts": [
     {
-      "js": ["content.js"],
-      "matches": ["http://*.backlog.com//", "http://*.backlog.jp//"]
+      "js": ["./content.js"],
+      "css": ["./style.css"],
+      "matches": ["*://*.backlog.com/*", "*://*.backlog.jp/*"],
+      "run_at": "document_end"
     }
   ],
   "action": {
