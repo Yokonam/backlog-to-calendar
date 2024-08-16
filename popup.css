@@ -13,7 +13,7 @@ body {
   border-bottom: 1px solid #f1f1f1;
 }
 .tab-link {
-  padding: 10px;
+  padding: 5px;
   text-align: center;
   border: none;
   cursor: pointer;
@@ -52,8 +52,6 @@ input[type='text'] {
 [data-type]:hover {
   background-color: #0056b3;
 }
-button {
-}
 a[data-type='add'] {
   background-color: #28a745;
 }
@@ -84,8 +82,8 @@ ul {
 .task {
   display: grid;
   grid-template-columns: 1fr auto auto;
-  gap: 10px;
-  padding: 10px;
+  gap: 5px;
+  padding: 5px;
   border-bottom: 1px solid #f1f1f1;
 }
 .add-inner {

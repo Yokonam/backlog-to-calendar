@@ -1,3 +1,5 @@
+'use strict';
+
 document.addEventListener("DOMContentLoaded", function () {
   const addButton = document.querySelector("#add");
   const taskInput = document.querySelector("input[type='text']");
