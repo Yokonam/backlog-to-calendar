@@ -12,6 +12,7 @@ body {
   grid-template-columns: 1fr 1fr;
   border-bottom: 1px solid #f1f1f1;
 }
+
 .tab-link {
   padding: 5px;
   text-align: center;
@@ -22,10 +23,12 @@ body {
   text-decoration: none;
   font-size: 14px;
 }
+
 .tab-link[aria-selected='true'] {
   font-weight: bold;
   border-bottom: 3px solid #007bff;
 }
+
 .content {
   padding: 10px 5px;
 }
