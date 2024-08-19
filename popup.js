@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const taskText = `${task.group} | ${task.category} | ${task.name}`;
     li.innerHTML = `
-      <span class="name">${taskText}</span>
+      <span class="name"><span class="tag" data-group="${task.group}">${task.group}</span>${task.category} | ${task.name}</span></span>
       <a href="https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(taskText)}&details=${encodeURIComponent(task.group)}" data-type="add" target="_blank">追加</a>
       <button data-type="delete">削除</button>
     `;
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const deleteButton = li.querySelector("button[data-type='delete']");
     deleteButton.addEventListener("click", () => handleDeleteTask(li, task));
 
-    taskList.appendChild(li);
+    taskList.prepend(li);
   }
 
   function handleDeleteTask(listItem, task) {

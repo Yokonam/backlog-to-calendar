@@ -10,7 +10,7 @@ body {
 .tab {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border-bottom: 1px solid #f1f1f1;
+  border-bottom: 1px solid #ededec;
 }
 
 .tab-link {
@@ -78,8 +78,47 @@ ul {
 
 .name {
   font-size: 14px;
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 5px;
+}
+
+.tag {
+  padding: 2px 8px;
+  white-space: nowrap;
+  border-radius: 3px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+[data-group='AG1-1'] {
+  background-color: rgb(211, 229, 239);
+}
+
+[data-group='AC2-1'] {
+  background-color: rgb(219, 237, 219);
+}
+
+[data-group='AC2-EC'] {
+  background-color: rgb(232, 222, 238);
+}
+
+[data-group='AC1-1'] {
+  background-color: rgb(245, 224, 233);
+}
+
+[data-group='AG2-1'] {
+  background-color: rgb(251, 237, 214);
+}
+
+[data-group='IN-HOUSE'] {
+  background-color: rgb(251, 236, 221);
+}
+
+[data-group='その他'] {
+  background-color: rgb(227, 226, 224);
 }
 
 .task {
@@ -87,7 +126,11 @@ ul {
   grid-template-columns: 1fr auto auto;
   gap: 5px;
   padding: 5px;
-  border-bottom: 1px solid #f1f1f1;
+  border-bottom: 1px solid #ededec;
+}
+.task--default {
+  /* grid-template-columns: 1fr auto; */
+  font-size: 12px;
 }
 .add-inner {
   display: grid;
@@ -102,6 +145,8 @@ footer {
 label {
   font-size: 14px;
   cursor: pointer;
+  display: inline-block;
+  padding: 2px 5px;
 }
 
 .radio-list > * + * {
