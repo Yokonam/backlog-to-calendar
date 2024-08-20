@@ -78,9 +78,8 @@ ul {
 
 .name {
   font-size: 14px;
-  display: grid;
-  grid-template-columns: 70px 1fr;
-  gap: 5px;
+  display: flex;
+  align-items: center;
 }
 
 .tag {
@@ -123,13 +122,17 @@ ul {
 
 .task {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 70px 1fr auto;
   gap: 5px;
   padding: 5px;
   border-bottom: 1px solid #ededec;
 }
+.task__buttons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
 .task--default {
-  /* grid-template-columns: 1fr auto; */
   font-size: 12px;
 }
 .add-inner {
@@ -151,4 +154,17 @@ label {
 
 .radio-list > * + * {
   margin-top: 5px;
+}
+
+.other {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  height: 28px;
+  width: 28px;
+  border-radius: 4px;
+}
+
+.other:hover {
+  background-color: rgba(55, 53, 47, 0.06);
 }
