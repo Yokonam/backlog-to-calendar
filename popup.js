@@ -43,8 +43,14 @@ document.addEventListener("DOMContentLoaded", function () {
       <span class="tag" data-group="${task.group}">${task.group}</span>
       <span class="name">${task.category} | ${task.name}</span>
       <div class="task__buttons">
-      <a href="https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(taskText)}&details=${encodeURIComponent(task.group)}" data-type="add" target="_blank">追加</a>
-      <button data-type="delete">削除</button>
+        <a href="https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(taskText)}&details=${encodeURIComponent(task.group)}" data-type="add" target="_blank">追加</a>
+        <button type="button" class="other">
+          <img src="dod.svg" alt="その他" width="16" height="16" />
+        </button>
+        <div class="popup" aria-hidden="true">
+          <button type="button" class="delete">削除</button>
+          <button type="button" class="copy">コピー</button>
+        </div>
       </div>
     `;
 
@@ -111,4 +117,6 @@ document.addEventListener("DOMContentLoaded", function () {
   function clearTaskInput() {
     taskInput.value = "";
   }
+
+
 });
