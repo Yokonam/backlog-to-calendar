@@ -5,11 +5,20 @@ document.addEventListener("DOMContentLoaded", function () {
   const taskInput = document.querySelector("input[type='text']");
   const taskList = document.querySelector("#task-list");
 
+  // 複数の指定されたタスク
+  const specifiedTasks = [
+    { name: "", group: "その他", category: "庶務作業" },
+    { name: "", group: "その他", category: "MTG・面談" },
+    { name: "", group: "その他", category: "相談・サポート" },
+    { name: "", group: "その他", category: "学習、情報収集、環境整備" },
+  ];
+
   init();
 
   function init() {
     loadTasksFromStorage();
     addButton.addEventListener("click", handleAddTask);
+    document.addEventListener("click", handleDocumentClick); // Listen for clicks on the document
     setupTabNavigation();
   }
 
@@ -17,6 +26,9 @@ document.addEventListener("DOMContentLoaded", function () {
     chrome.storage.sync.get("tasks", function (data) {
       const tasks = data.tasks || [];
       tasks.forEach(addTaskToList);
+
+      // 指定されたタスクを常にリストの一番下に追加
+      specifiedTasks.forEach(task => addTaskToBottom(task));
     });
   }
 
@@ -35,6 +47,16 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function addTaskToList(task) {
+    const li = createTaskListItem(task);
+    taskList.prepend(li);
+  }
+
+  function addTaskToBottom(task) {
+    const li = createTaskListItem(task);
+    taskList.appendChild(li);
+  }
+
+  function createTaskListItem(task) {
     const li = document.createElement("li");
     li.classList.add("task");
 
@@ -48,21 +70,65 @@ document.addEventListener("DOMContentLoaded", function () {
           <img src="dod.svg" alt="その他" width="16" height="16" />
         </button>
         <div class="popup" aria-hidden="true">
-          <button type="button" class="delete">削除</button>
+          ${!isSpecifiedTask(task) ? '<button type="button" class="delete">削除</button>' : ''}
           <button type="button" class="copy">コピー</button>
         </div>
       </div>
     `;
 
-    const deleteButton = li.querySelector("button[data-type='delete']");
-    deleteButton.addEventListener("click", () => handleDeleteTask(li, task));
+    if (!isSpecifiedTask(task)) {
+      const deleteButton = li.querySelector(".delete");
+      deleteButton.addEventListener("click", () => handleDeleteTask(li, task));
+    }
 
-    taskList.prepend(li);
+    const copyButton = li.querySelector(".copy");
+    copyButton.addEventListener("click", () => handleCopyTask(taskText));
+
+    const otherButton = li.querySelector(".other");
+    otherButton.addEventListener("click", (event) => handleOtherButtonClick(event, li));
+
+    return li;
+  }
+
+  function isSpecifiedTask(task) {
+    return specifiedTasks.some(specifiedTask =>
+      specifiedTask.name === task.name &&
+      specifiedTask.group === task.group &&
+      specifiedTask.category === task.category
+    );
+  }
+
+  function handleOtherButtonClick(event, listItem) {
+    event.stopPropagation(); // Prevent the document click handler from closing the popup immediately
+    const popup = listItem.querySelector(".popup");
+    const isHidden = popup.getAttribute("aria-hidden") === "true";
+    closeAllPopups(); // Close any other open popups
+    popup.setAttribute("aria-hidden", !isHidden);
+  }
+
+  function handleDocumentClick(event) {
+    const otherButton = event.target.closest(".other");
+    if (!otherButton) {
+      closeAllPopups();
+    }
+  }
+
+  function closeAllPopups() {
+    const allPopups = document.querySelectorAll(".popup");
+    allPopups.forEach(popup => popup.setAttribute("aria-hidden", "true"));
   }
 
   function handleDeleteTask(listItem, task) {
     listItem.remove();
     removeTaskFromStorage(task);
+  }
+
+  function handleCopyTask(taskText) {
+    navigator.clipboard.writeText(taskText).then(() => {
+      alert('Task text copied to clipboard!');
+    }).catch(err => {
+      console.error('Failed to copy text: ', err);
+    });
   }
 
   function saveTask(task) {
@@ -117,6 +183,4 @@ document.addEventListener("DOMContentLoaded", function () {
   function clearTaskInput() {
     taskInput.value = "";
   }
-
-
 });
