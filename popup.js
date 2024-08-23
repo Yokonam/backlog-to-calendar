@@ -1,11 +1,10 @@
 'use strict';
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   const addButton = document.querySelector("#add");
   const taskInput = document.querySelector("input[type='text']");
   const taskList = document.querySelector("#task-list");
 
-  // 複数の指定されたタスク
   const specifiedTasks = [
     { name: "", group: "その他", category: "庶務作業" },
     { name: "", group: "その他", category: "MTG・面談" },
@@ -18,22 +17,22 @@ document.addEventListener("DOMContentLoaded", function () {
   function init() {
     loadTasksFromStorage();
     addButton.addEventListener("click", handleAddTask);
-    document.addEventListener("click", handleDocumentClick); // Listen for clicks on the document
+    document.addEventListener("click", handleDocumentClick);
     setupTabNavigation();
   }
 
   function loadTasksFromStorage() {
-    chrome.storage.sync.get("tasks", function (data) {
+    chrome.storage.sync.get("tasks", (data) => {
       const tasks = data.tasks || [];
       tasks.forEach(addTaskToList);
-
-      // 指定されたタスクを常にリストの一番下に追加
-      specifiedTasks.forEach(task => addTaskToBottom(task));
+      specifiedTasks.forEach(addTaskToBottom);
     });
   }
 
   function handleAddTask() {
     const taskName = taskInput.value.trim();
+    if (taskName === "") return; // Prevent adding empty tasks
+
     const task = createTaskObject(taskName);
     addTaskToList(task);
     saveTask(task);
@@ -41,9 +40,14 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function createTaskObject(name) {
-    const group = document.querySelector('input[name="group"]:checked').value;
-    const category = document.querySelector('input[name="category"]:checked').value;
+    const group = getRadioValue('group');
+    const category = getRadioValue('category');
     return { name, group, category };
+  }
+
+  function getRadioValue(name) {
+    const radio = document.querySelector(`input[name="${name}"]:checked`);
+    return radio ? radio.value : "";
   }
 
   function addTaskToList(task) {
@@ -61,9 +65,10 @@ document.addEventListener("DOMContentLoaded", function () {
     li.classList.add("task");
 
     const taskText = `${task.group} | ${task.category} | ${task.name}`;
+
     li.innerHTML = `
-      <span class="tag" data-group="${task.group}">${task.group}</span>
-      <span class="name">${task.category} | ${task.name}</span>
+      <span class="tag" data-group="${task.group}">${escapeHTML(task.group)}</span>
+      <span class="name">${escapeHTML(task.category)} | ${escapeHTML(task.name)}</span>
       <div class="task__buttons">
         <a href="https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(taskText)}&details=${encodeURIComponent(task.group)}" data-type="add" target="_blank">追加</a>
         <button type="button" class="other">
@@ -90,6 +95,12 @@ document.addEventListener("DOMContentLoaded", function () {
     return li;
   }
 
+  function escapeHTML(string) {
+    const div = document.createElement('div');
+    div.textContent = string;
+    return div.innerHTML;
+  }
+
   function isSpecifiedTask(task) {
     return specifiedTasks.some(specifiedTask =>
       specifiedTask.name === task.name &&
@@ -99,16 +110,15 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function handleOtherButtonClick(event, listItem) {
-    event.stopPropagation(); // Prevent the document click handler from closing the popup immediately
+    event.stopPropagation();
     const popup = listItem.querySelector(".popup");
     const isHidden = popup.getAttribute("aria-hidden") === "true";
-    closeAllPopups(); // Close any other open popups
+    closeAllPopups();
     popup.setAttribute("aria-hidden", !isHidden);
   }
 
   function handleDocumentClick(event) {
-    const otherButton = event.target.closest(".other");
-    if (!otherButton) {
+    if (!event.target.closest(".other")) {
       closeAllPopups();
     }
   }
@@ -124,15 +134,13 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function handleCopyTask(taskText) {
-    navigator.clipboard.writeText(taskText).then(() => {
-      alert('Task text copied to clipboard!');
-    }).catch(err => {
-      console.error('Failed to copy text: ', err);
-    });
+    navigator.clipboard.writeText(taskText)
+      .then(() => alert('Task text copied to clipboard!'))
+      .catch(err => console.error('Failed to copy text: ', err));
   }
 
   function saveTask(task) {
-    chrome.storage.sync.get("tasks", function (data) {
+    chrome.storage.sync.get("tasks", (data) => {
       const tasks = data.tasks || [];
       tasks.push(task);
       chrome.storage.sync.set({ tasks });
@@ -140,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function removeTaskFromStorage(taskToRemove) {
-    chrome.storage.sync.get("tasks", function (data) {
+    chrome.storage.sync.get("tasks", (data) => {
       const tasks = data.tasks || [];
       const updatedTasks = tasks.filter(task =>
         task.name !== taskToRemove.name ||
@@ -156,7 +164,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const sections = document.querySelectorAll(".content");
 
     tabLinks.forEach(link => {
-      link.addEventListener("click", function (event) {
+      link.addEventListener("click", (event) => {
         event.preventDefault();
         updateTabs(link, tabLinks, sections);
       });
