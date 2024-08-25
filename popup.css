@@ -1,7 +1,7 @@
 body {
   width: 500px;
-  color: #333;
   font-size: 12px;
+  color: #333;
 }
 
 * {
@@ -9,19 +9,19 @@ body {
 }
 
 .tab {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   border-bottom: 1px solid #ededec;
-  position: relative;
 }
 
 .tab::before {
-  content: '';
-  width: 50%;
   position: absolute;
   bottom: 0;
   left: 0;
+  width: 50%;
   height: 3px;
+  content: '';
   background-color: #007bff;
   transition: left 0.3s ease-in-out;
 }
@@ -36,13 +36,13 @@ body {
 
 .tab-link {
   padding: 5px;
-  text-align: center;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  color: inherit;
-  text-decoration: none;
   font-size: 14px;
+  color: inherit;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s;
 }
 
 .tab-link[aria-selected='true'] {
@@ -61,25 +61,25 @@ body {
 input[type='text'] {
   width: 100%;
   padding: 5px;
-  line-height: 20px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
   margin-bottom: 10px;
   font-size: 14px;
-  background: rgba(242, 241, 238, 0.6);
+  line-height: 20px;
+  background: rgb(242 241 238 / 60%);
+  border: 1px solid #ccc;
+  border-radius: 6px;
 }
 
 [data-type] {
-  padding: 5px 10px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  text-decoration: none;
   display: flex;
   align-items: center;
+  padding: 5px 10px;
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
 }
 
 [data-type]:hover {
@@ -95,68 +95,68 @@ input[type='text'] {
 }
 
 ul {
-  list-style: none;
   padding: 0;
   margin: 0;
+  list-style: none;
 }
 
 .name {
-  font-size: 14px;
   display: flex;
   align-items: center;
+  font-size: 14px;
 }
 
 .tag {
-  padding: 2px 8px;
-  white-space: nowrap;
-  border-radius: 3px;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 2px 8px;
   font-size: 12px;
+  white-space: nowrap;
+  border-radius: 3px;
 }
 
 [data-group] {
-  background-color: rgb(227, 226, 224);
+  background-color: rgb(227 226 224);
 }
 
 [data-group='AG1-1'] {
-  background-color: rgb(211, 229, 239);
+  background-color: rgb(211 229 239);
 }
 
 [data-group='AC2-1'] {
-  background-color: rgb(219, 237, 219);
+  background-color: rgb(219 237 219);
 }
 
 [data-group='AC2-EC'] {
-  background-color: rgb(232, 222, 238);
+  background-color: rgb(232 222 238);
 }
 
 [data-group='AC1-1'] {
-  background-color: rgb(245, 224, 233);
+  background-color: rgb(245 224 233);
 }
 
 [data-group='AG2-1'] {
-  background-color: rgb(251, 237, 214);
+  background-color: rgb(251 237 214);
 }
 
 [data-group='IN-HOUSE'] {
-  background-color: rgb(251, 236, 221);
+  background-color: rgb(251 236 221);
 }
 
 .task {
+  position: relative;
   display: grid;
   grid-template-columns: 70px 1fr auto;
   gap: 5px;
   padding: 5px;
   border-bottom: 1px solid #ededec;
-  position: relative;
 }
 
 .task__buttons {
   display: flex;
-  align-items: center;
   gap: 5px;
+  align-items: center;
 }
 
 .add-inner {
@@ -171,10 +171,10 @@ footer {
 }
 
 label {
-  font-size: 14px;
-  cursor: pointer;
   display: inline-block;
   padding: 2px 5px;
+  font-size: 14px;
+  cursor: pointer;
 }
 
 .radio-list > * + * {
@@ -182,58 +182,58 @@ label {
 }
 
 .other {
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  height: 28px;
   width: 28px;
+  height: 28px;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
   border-radius: 4px;
 }
 
 .other:hover {
-  background-color: rgba(55, 53, 47, 0.06);
+  background-color: rgb(55 53 47 / 6%);
 }
 
 .popup {
-  background-color: #fff;
-  padding: 5px 0;
-  border-radius: 5px;
-  box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px,
-    rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 2px;
   position: absolute;
-  right: 0;
   top: 0;
-  width: 80px;
-  transition: opacity 0.3s;
+  right: 0;
   z-index: 1;
+  width: 80px;
+  padding: 5px 0;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: rgb(15 15 15 / 5%) 0 0 0 1px, rgb(15 15 15 / 10%) 0 3px 6px,
+    rgb(15 15 15 / 20%) 0 9px 2px;
+  transition: opacity 0.3s;
 }
 
 .popup[aria-hidden='true'] {
-  opacity: 0;
-  visibility: hidden;
   pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
 }
 
 .popup[aria-hidden='false'] {
-  opacity: 1;
-  visibility: visible;
   pointer-events: auto;
+  visibility: visible;
+  opacity: 1;
 }
 
 .popup button {
-  background-color: transparent;
-  border: 0;
-  cursor: pointer;
   display: flex;
-  align-items: center;
   gap: 2px;
+  align-items: center;
   width: 100%;
   padding: 2px 5px;
   text-align: left;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
 }
 
 .popup button:hover {
-  background-color: rgba(55, 53, 47, 0.06);
+  background-color: rgb(55 53 47 / 6%);
 }
 
 .popup img {
