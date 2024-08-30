@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="task__buttons">
         <a href="https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(taskText)}&details=${encodeURIComponent(task.group)}" data-type="add" target="_blank">追加</a>
         <button type="button" class="other">
-          <img src="dod.svg" alt="その他" width="16" height="16" />
+          <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="width:16px;height:16px;opacity:1" viewBox="0 0 512 512"><circle cx="55.1" cy="256" r="55.1" style="fill:var(--_fill, #333)"/><circle cx="256" cy="256" r="55.1" style="fill:var(--_fill, #333)"/><circle cx="456.9" cy="256" r="55.1" style="fill:var(--_fill, #333)"/></svg>
         </button>
         <div class="popup" aria-hidden="true">
           ${!isSpecifiedTask(task) ? '<button type="button" class="delete">削除</button>' : ''}

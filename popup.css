@@ -1,10 +1,3 @@
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #191919;
-    --body-color: rgba(255, 255, 255, 0.81);
-  }
-}
-
 body {
   width: 500px;
   font-size: 12px;
@@ -251,4 +244,68 @@ label {
 
 .delete {
   color: #dc3545;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: rgb(37, 37, 37);
+    --body-color: rgba(255, 255, 255, 0.81);
+  }
+  input[type='text'] {
+    background: rgba(255, 255, 255, 0.055);
+    color: rgba(255, 255, 255, 0.81);
+  }
+
+  [data-group] {
+    color: rgba(255, 255, 255, 0.81);
+    background-color: #5a5a5a;
+  }
+
+  .other {
+    --_fill: rgba(255, 255, 255, 0.81);
+  }
+
+  [data-group='AG1-1'] {
+    background-color: rgb(40, 69, 108);
+  }
+
+  [data-group='AC2-1'] {
+    background-color: #2b593f;
+  }
+
+  [data-group='AC2-EC'] {
+    background-color: #492f64;
+  }
+
+  [data-group='AC1-1'] {
+    background-color: #69314c;
+  }
+
+  [data-group='AG2-1'] {
+    background-color: #825e33;
+  }
+
+  [data-group='IN-HOUSE'] {
+    background-color: #854c1d;
+  }
+
+  .popup {
+    background-color: rgb(37, 37, 37);
+    color: rgba(255, 255, 255, 0.81);
+  }
+  .popup button {
+    color: rgba(255, 255, 255, 0.81);
+  }
+
+  .other:hover {
+    background-color: #313131;
+  }
+
+  .popup button:hover {
+    background-color: #313131;
+  }
+
+  .popup button.delete {
+    color: #dc3545;
+  }
 }
