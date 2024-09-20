@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function handleAddTask() {
     const taskName = taskInput.value.trim();
-    if (taskName === "") return; // Prevent adding empty tasks
+    if (taskName === "") return;
 
     const task = createTaskObject(taskName);
     addTaskToList(task);
