@@ -135,8 +135,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function handleCopyTask(taskText) {
     navigator.clipboard.writeText(taskText)
-      .then(() => alert('Task text copied to clipboard!'))
-      .catch(err => console.error('Failed to copy text: ', err));
+      .then(() => alert('タスク名をコピーしました！'))
+      .catch(err => console.error('テキストのコピーに失敗しました： ', err));
   }
 
   function saveTask(task) {
