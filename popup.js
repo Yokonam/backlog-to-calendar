@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
     { name: "", group: "その他", category: "庶務作業" },
     { name: "", group: "その他", category: "MTG・面談" },
     { name: "", group: "その他", category: "相談・サポート" },
-    { name: "", group: "その他", category: "調査・作業準備等" },
     { name: "", group: "その他", category: "教育、情報共有" },
     { name: "", group: "その他", category: "学習、情報収集、環境整備" },
   ];
