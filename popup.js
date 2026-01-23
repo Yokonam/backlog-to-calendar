@@ -6,11 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const taskList = document.querySelector("#task-list");
 
   const specifiedTasks = [
-    { name: "", group: "その他", category: "庶務作業" },
-    { name: "", group: "その他", category: "MTG・面談" },
-    { name: "", group: "その他", category: "相談・サポート" },
-    { name: "", group: "その他", category: "教育、情報共有" },
-    { name: "", group: "その他", category: "学習、情報収集、環境整備" },
+    { name: "", group: "その他", category: "雑務・その他" },
+    { name: "", group: "その他", category: "社内関連" },
+    { name: "", group: "その他", category: "勉強関連" },
+    { name: "", group: "その他", category: "教育関連" },
+    { name: "", group: "その他", category: "採用関連" },
   ];
 
   init();
@@ -64,25 +64,28 @@ document.addEventListener("DOMContentLoaded", () => {
   function createTaskListItem(task) {
     const li = document.createElement("li");
     li.classList.add("task");
+    const isSpecified = isSpecifiedTask(task);
 
-    const taskText = `${task.group} | ${task.category} | ${task.name}`;
+    const taskText = isSpecified ? `${task.group} | ${task.category}` : `${task.group} | ${task.name}`;
+    const nameText = isSpecified ? task.category : task.name;
+
 
     li.innerHTML = `
       <span class="tag" data-group="${task.group}">${escapeHTML(task.group)}</span>
-      <span class="name">${escapeHTML(task.category)} | ${escapeHTML(task.name)}</span>
+      <span class="name">${nameText}</span>
       <div class="task__buttons">
         <a href="https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(taskText)}&details=${encodeURIComponent(task.group)}" data-type="add" target="_blank">追加</a>
         <button type="button" class="other">
           <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="width:16px;height:16px;opacity:1" viewBox="0 0 512 512"><circle cx="55.1" cy="256" r="55.1" style="fill:var(--_fill, #333)"/><circle cx="256" cy="256" r="55.1" style="fill:var(--_fill, #333)"/><circle cx="456.9" cy="256" r="55.1" style="fill:var(--_fill, #333)"/></svg>
         </button>
         <div class="popup" aria-hidden="true">
-          ${!isSpecifiedTask(task) ? '<button type="button" class="delete">削除</button>' : ''}
+          ${!isSpecified ? '<button type="button" class="delete">削除</button>' : ''}
           <button type="button" class="copy">コピー</button>
         </div>
       </div>
     `;
 
-    if (!isSpecifiedTask(task)) {
+    if (!isSpecified) {
       const deleteButton = li.querySelector(".delete");
       deleteButton.addEventListener("click", () => handleDeleteTask(li, task));
     }

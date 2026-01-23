@@ -142,8 +142,12 @@ ul {
   background-color: rgb(251 237 214);
 }
 
-[data-group='IN-HOUSE'] {
-  background-color: rgb(251 236 221);
+[data-group='PL'] {
+  background-color: #fbebde;
+}
+
+[data-group='DHR'] {
+  background-color: #f5ede9;
 }
 
 .task {
@@ -163,7 +167,8 @@ ul {
 
 .add-inner {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: auto 1fr;
+  gap: 50px;
 }
 
 footer {
@@ -181,6 +186,10 @@ label {
 
 .radio-list > * + * {
   margin-top: 5px;
+}
+
+.radio-list__item {
+  display: flex;
 }
 
 .other {
