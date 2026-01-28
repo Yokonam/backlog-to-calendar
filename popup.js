@@ -1,5 +1,12 @@
 'use strict';
 
+// BACKLOG_CONFIGはconfig.jsから読み込まれます
+
+// ===== デバッグ設定 =====
+// trueにするとAPI呼び出しをモックデータで置き換えます
+const MOCK_MODE = false;
+// =======================
+
 document.addEventListener("DOMContentLoaded", () => {
   const addButton = document.querySelector("#add");
   const taskInput = document.querySelector("input[type='text']");
@@ -81,6 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="popup" aria-hidden="true">
           ${!isSpecified ? '<button type="button" class="delete">削除</button>' : ''}
           <button type="button" class="copy">コピー</button>
+          <button type="button" class="add-to-backlog">Backlogに追加</button>
         </div>
       </div>
     `;
@@ -92,6 +100,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const copyButton = li.querySelector(".copy");
     copyButton.addEventListener("click", () => handleCopyTask(taskText));
+
+    const addToBacklogButton = li.querySelector(".add-to-backlog");
+    addToBacklogButton.addEventListener("click", () => handleAddToBacklog(task));
 
     const otherButton = li.querySelector(".other");
     otherButton.addEventListener("click", (event) => handleOtherButtonClick(event, li));
@@ -141,6 +152,166 @@ document.addEventListener("DOMContentLoaded", () => {
     navigator.clipboard.writeText(taskText)
       .then(() => alert('タスク名をコピーしました！'))
       .catch(err => console.error('テキストのコピーに失敗しました： ', err));
+  }
+
+  function handleAddToBacklog(task) {
+    const taskText = isSpecifiedTask(task) ? `${task.category}` : `${task.name}`;
+    
+    // taskTextから先頭の課題キー部分を抽出
+    const issueKeyMatch = taskText.match(/^[A-Z_]+-\d+/);
+    const customFieldValue = issueKeyMatch ? issueKeyMatch[0] : task.group;
+    
+    // 開始日を今日に設定
+    const startDate = new Date();
+    const startDateStr = startDate.toISOString().split('T')[0];  // YYYY-MM-DD形式
+
+    // 期限日を1週間後に設定
+    const dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() + 7);
+    const dueDateStr = dueDate.toISOString().split('T')[0];  // YYYY-MM-DD形式
+
+    // 確認モーダルを表示
+    showBacklogConfirmModal({
+      taskText,
+      customFieldValue,
+      startDateStr,
+      dueDateStr,
+      estimatedHours: 1  // デフォルト1時間
+    });
+  }
+
+  function showBacklogConfirmModal(data) {
+    const modal = document.getElementById('backlog-confirm-modal');
+    const summaryInput = document.getElementById('modal-summary');
+    const startDateInput = document.getElementById('modal-start-date');
+    const dueDateInput = document.getElementById('modal-due-date');
+    const estimatedHoursInput = document.getElementById('modal-estimated-hours');
+    const timeUnitSelect = document.getElementById('modal-time-unit');
+    const convertedHoursSpan = document.getElementById('converted-hours');
+    const confirmButton = document.getElementById('modal-confirm');
+    const cancelButton = document.getElementById('modal-cancel');
+
+    // モーダルに初期値を設定
+    summaryInput.value = data.taskText;
+    startDateInput.value = data.startDateStr;
+    dueDateInput.value = data.dueDateStr;
+    estimatedHoursInput.value = data.estimatedHours;
+    timeUnitSelect.value = 'hours';
+    convertedHoursSpan.textContent = '';
+
+    // 単位変更または値変更時の換算表示
+    const updateConvertedHours = () => {
+      const value = parseFloat(estimatedHoursInput.value);
+      const unit = timeUnitSelect.value;
+      
+      if (value && unit === 'days') {
+        const hours = value * 8;
+        convertedHoursSpan.textContent = `(${hours}時間)`;
+      } else {
+        convertedHoursSpan.textContent = '';
+      }
+    };
+
+    estimatedHoursInput.addEventListener('input', updateConvertedHours);
+    timeUnitSelect.addEventListener('change', updateConvertedHours);
+
+    // モーダルを表示
+    modal.style.display = 'flex';
+    closeAllPopups();
+
+    // 確認ボタンのクリックイベント
+    confirmButton.onclick = async () => {
+      modal.style.display = 'none';
+      
+      // 予定時間を計算（人日の場合は8倍）
+      let estimatedHours = parseFloat(estimatedHoursInput.value) || null;
+      if (estimatedHours && timeUnitSelect.value === 'days') {
+        estimatedHours = estimatedHours * 8;
+      }
+      
+      await submitToBacklog({
+        taskText: summaryInput.value,
+        customFieldValue: data.customFieldValue,
+        startDate: startDateInput.value,
+        dueDate: dueDateInput.value,
+        estimatedHours: estimatedHours
+      });
+    };
+
+    // キャンセルボタンのクリックイベント
+    cancelButton.onclick = () => {
+      modal.style.display = 'none';
+    };
+  }
+
+  async function submitToBacklog(data) {
+    try {
+      if (MOCK_MODE) {
+        // モックデータで成功通知を表示
+        const mockIssueKey = 'TEST-123';
+        const mockIssueUrl = `https://example.backlog.jp/view/${mockIssueKey}`;
+        
+        console.log('【モックモード】課題追加をシミュレート:', {
+          issueKey: mockIssueKey,
+          summary: data.taskText,
+          startDate: data.startDate,
+          dueDate: data.dueDate,
+          estimatedHours: data.estimatedHours
+        });
+        
+        // 通知を表示
+        showBacklogNotification(mockIssueKey, mockIssueUrl);
+        return;
+      }
+      
+      const url = `https://${BACKLOG_CONFIG.spaceKey}.backlog.jp/api/v2/issues?apiKey=${BACKLOG_CONFIG.apiKey}`;
+      const params = new URLSearchParams({
+        projectId: BACKLOG_CONFIG.projectId,
+        summary: data.taskText,
+        description: data.taskText,
+        issueTypeId: BACKLOG_CONFIG.issueTypeId,
+        priorityId: BACKLOG_CONFIG.priorityId,
+        startDate: data.startDate,
+        dueDate: data.dueDate,
+        assigneeId: '308322',
+        customField_210589: data.customFieldValue,  // 案件ID
+        customField_210590: data.startDate,  // 工数集計開始（開始日と同じ）
+        customField_210591: data.dueDate,  // 工数集計終了（期限日と同じ）
+      });
+
+      // 予定時間が入力されている場合のみ追加
+      if (data.estimatedHours) {
+        params.append('estimatedHours', data.estimatedHours);
+        // 見積金額 = 5000 × 予定時間（時間）
+        const estimatedAmount = data.estimatedHours * 5000;
+        params.append('customField_210574', estimatedAmount);
+      }
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: params.toString()
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.errors?.[0]?.message || 'Backlogへの追加に失敗しました');
+      }
+
+      const result = await response.json();
+      const issueUrl = `https://${BACKLOG_CONFIG.spaceKey}.backlog.jp/view/${result.issueKey}`;
+      
+      // 通知を表示
+      showBacklogNotification(result.issueKey, issueUrl);
+      
+      // コンソールにもリンクを出力
+      console.log('追加された課題:', issueUrl);
+    } catch (error) {
+      console.error('Backlogへの追加エラー:', error);
+      alert(`エラー: ${error.message}`);
+    }
   }
 
   function saveTask(task) {
@@ -194,5 +365,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function clearTaskInput() {
     taskInput.value = "";
+  }
+
+  function showBacklogNotification(issueKey, issueUrl) {
+    const notification = document.getElementById('success-notification');
+    const messageSpan = notification.querySelector('.notification-message');
+    const closeButton = notification.querySelector('.notification-close');
+    
+    // メッセージを設定
+    messageSpan.innerHTML = `Backlogに課題を追加しました！<br>課題キー: <a href="${issueUrl}" target="_blank" style="color: white; text-decoration: underline;">${issueKey}</a>`;
+    
+    // 通知を表示
+    notification.style.display = 'block';
+    
+    // 閉じるボタンのイベント
+    closeButton.onclick = () => {
+      notification.style.display = 'none';
+    };
+    
+    // 5秒後に自動的に非表示
+    setTimeout(() => {
+      notification.style.display = 'none';
+    }, 5000);
   }
 });
